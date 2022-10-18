@@ -1,9 +1,12 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import FreetCollection from './collection';
+import MerchantFreetCollection from '../merchantFreet/collection';
 import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
+import * as merchantFreetValidator from '../merchantFreet/middleware';
 import * as util from './util';
+import * as merchantUtil from '../merchantFreet/util';
 
 const router = express.Router();
 
@@ -63,16 +66,32 @@ router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isValidFreetContent
+    freetValidator.isValidFreetContent,
+    merchantFreetValidator.isValidMerchantFreetTitle,
+    merchantFreetValidator.isValidPrice
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const freet = await FreetCollection.addOne(userId, req.body.content);
-
-    res.status(201).json({
-      message: 'Your freet was created successfully.',
-      freet: util.constructFreetResponse(freet)
-    });
+    
+    var freetType = req.body.typeFreet; // Grab freet type, ie merchant
+    if (freetType == "merchant") { 
+      const freet = await FreetCollection.addOne(userId, req.body.content, freetType);
+      console.log("userID", userId);
+      console.log("freet_id", freet._id);
+      const merchantFreet = await MerchantFreetCollection.addOne(freet._id, req.body.expirationDate, "forsale" ,req.body.listingName, req.body.listingPrice);
+      res.status(201).json({
+        message: 'Your merchant freet was created successfully.',
+        freet: util.constructFreetResponse(freet),
+        merchantFreet : merchantUtil.constructMerchantFreetResponse(merchantFreet)
+      });
+    }
+    else {
+      const freet = await FreetCollection.addOne(userId, req.body.content, freetType);
+      res.status(201).json({
+        message: 'Your freet was created successfully.',
+        freet: util.constructFreetResponse(freet),
+      });
+    }
   }
 );
 

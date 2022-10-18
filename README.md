@@ -221,11 +221,14 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not the author of the freet
 - `404` if the freetId is invalid
 
-#### `PUT /api/freets/:freetId?` - Update an existing freet
+#### `PUT /api/freets/:freetId?` - Update (edit) an existing freet
 
 **Body**
 
 - `content` _{string}_ - The new content of the freet
+- `freeType` _{string}_ - The new type of the freet (can only update to FleetingFreet)
+- `expirationDate` _{Date}_ - The new expiration date of fleeting freet (if freetType is changed from default)
+
 
 **Returns**
 
@@ -313,3 +316,63 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+**---New Concept----**
+
+#### `GET /api/freets?author=USERNAME&freetType=TYPE` - Get different types of freets by author
+
+**Body**
+
+- `username` _{string}_ - The user's username
+- `freetType` _{string}_ - The type of freet a user is looking for (Default, Fleeting, Merchant)
+
+**Returns**
+
+- An array of type `freetType` freets created by user with username `author`
+
+**Throws**
+
+- `400` if `freeType` is not given
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `PUT /api/freets?freetType=TYPE` - Update merchantFreet as sold
+
+**Body** 
+
+- `freeType` _{string}_ - The type of freet. In this case, "merchant"
+- `freeStatus` _{string}_ - For sale or Sold.
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `GET /api/archived?author=USERNAME` - Get collection of archived freets
+
+**Returns**
+
+- An array of archived freets created by user with username `author`
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+
+#### `POST /api/archived` - Add a freet to the set of archived freets
+
+**Body**
+
+- `freetId` _{string}_ - The freets id
+- `author` _{string}_ - The author of the archived tweet
+
+**Returns**
+
+- A success message
+- An array of freets that have been archived (Fleeting or Merchant)
+
+**Throws**
+
+- `400` if `author` is not given
+- `404` if `author` is not a recognized username of any user
+- `404` if the freetId is invalid

@@ -1,6 +1,7 @@
 import type {HydratedDocument, Types} from 'mongoose';
 import type {Freet} from './model';
 import FreetModel from './model';
+import MerchantFreetModel from '../merchantFreet/model';
 import UserCollection from '../user/collection';
 
 /**
@@ -19,13 +20,14 @@ class FreetCollection {
    * @param {string} content - The id of the content of the freet
    * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
    */
-  static async addOne(authorId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
+  static async addOne(authorId: Types.ObjectId | string, content: string, freetType: string): Promise<HydratedDocument<Freet>> {
     const date = new Date();
     const freet = new FreetModel({
       authorId,
       dateCreated: date,
       content,
-      dateModified: date
+      dateModified: date,
+      freetType
     });
     await freet.save(); // Saves freet to MongoDB
     return freet.populate('authorId');
@@ -94,7 +96,12 @@ class FreetCollection {
    * @param {string} authorId - The id of author of freets
    */
   static async deleteMany(authorId: Types.ObjectId | string): Promise<void> {
+    const freet = await FreetModel.findOne({authorId: authorId});
+    const freetId = freet._id;
+    console.log("freetId");
+    console.log(freetId);
     await FreetModel.deleteMany({authorId});
+    await MerchantFreetModel.deleteMany({freet: freetId}); // delete associated merchant tweet
   }
 }
 

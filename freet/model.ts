@@ -14,6 +14,8 @@ export type Freet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  freetType: string; // Type of Freet (Default, Merchant, Fleeting)
+  merchantFreet?: Types.ObjectId;
 };
 
 export type PopulatedFreet = {
@@ -22,6 +24,8 @@ export type PopulatedFreet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  freetType: string; // Type of Freet (Default, Merchant, Fleeting)
+  merchantFreet?: Types.ObjectId;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -49,7 +53,21 @@ const FreetSchema = new Schema<Freet>({
   dateModified: {
     type: Date,
     required: true
-  }
+  },
+  freetType: {
+    type: String,
+    required: true
+  }},
+  {
+    toObject: { virtuals: true, versionKey: false },
+    toJSON: { virtuals: true, versionKey: false }
+  });
+
+// Auto-populate a Freet.merchantFreet field with any merchant freets are associated with this freet such that freet._id === merchantFreet.freet._id
+FreetSchema.virtual('merchantFreet', {
+  ref: 'MerchantFreet',
+  localField: '_id',
+  foreignField: 'freet'
 });
 
 const FreetModel = model<Freet>('Freet', FreetSchema);

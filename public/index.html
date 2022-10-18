@@ -89,12 +89,43 @@
 
         <form id="create-freet">
           <h3>Create Freet</h3>
+          <label for="typeFreet">Freet Type</label>
+          <select name="typeFreet" id="typeFreet">
+            <option value="default">Default Freet</option>
+            <option value="merchant">Merchant Freet</option>
+            <option value="fleeting">Fleeting Freet</option>
+          </select>
+
+          <div>
+            <div class="type-freet-container" id="merchant">
+              <div>
+                <label for="listingName">Item Title:</label>
+                <input id="listingName" name="listingName">
+              </div>
+              <div>
+                <label for="listingPrice">Item Price:</label>
+                <input id="listingPrice" name="listingPrice">
+              </div>
+            </div>
+
+            <div class="type-freet-container" id="fleeting">
+              <div>
+                <label for="expirationDate">Expiration Date:</label>
+                <input type="date" id="expirationDate" name="expirationDate">
+              </div>
+            </div>
+
+          </div>
+          
+
           <div>
             <label for="content">Content:</label>
             <textarea id="content" name="content"></textarea>
           </div>
+
           <input type="submit" value="Create Freet">
         </form>
+
 
         <form id="edit-freet">
           <h3>Edit Freet</h3>
@@ -126,6 +157,27 @@
       </div>
     </section>
   </main>
-</body>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+  $('.type-freet-container').hide();
+
+  $('#typeFreet').change(function () {
+      var value = this.value;
+      $('.type-freet-container').hide();
+      if (value == "merchant") {
+        $('#' + this.value).show();
+        $('#fleeting').show();
+      }
+      else if (value == "fleeting") {
+        $('#merchant').hide()
+        $('#' + this.value).show();
+      }
+      else {
+        $('.type-freet-container').hide();
+      }
+  });
+  </script>
+
+</body>
 </html>
