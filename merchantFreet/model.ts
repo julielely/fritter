@@ -1,7 +1,7 @@
 import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {Freet} from '../freet/model';
-// import type {User} from '../user/model';
+import type {User} from '../user/model';
 
 /**
  * This file defines the properties stored in a Freet
@@ -12,20 +12,22 @@ import type {Freet} from '../freet/model';
 export type MerchantFreet = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   freet: Types.ObjectId; // references the parent Freet
-  // fleeting: Types.ObjectId; references an automatic fleeting time
-  expiration: Date;
   listingStatus: string;
   listingName: string;
   listingPrice: number;
+  listingLocation: string;
+  buyer: string;
+  // editedMerchant: Array<Types.ObjectId>;
 };
 
 export type PopulatedMerchantFreet = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   freet: Freet;
-  expiration: Date;
   listingStatus: string;
   listingName: string;
   listingPrice: number;
+  listingLocation: string;
+  // editedMerchant: Array<Types.ObjectId>;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -39,30 +41,38 @@ const MerchantFreetSchema = new Schema<MerchantFreet>({
     required: true,
     ref: 'Freet'
   },
-  // Expiration of Merchant Freet
-  // fleeting: {
-  //   type: Schema.Types.ObjectId,
-  //   required: true
-  // },
-  expiration: {
-    type: Date,
-    required: true
-  },
-  // Status of listing (sold or not sold)
-  listingStatus: {
+  // Status of listing (forsale, sold, deactivated)
+  listingStatus: { 
     type: String,
-    required: true
+    required: true,
+    default: "forsale"
   },
   // Name of item user is selling
   listingName: {
     type: String,
     required: true
   },
+  // Name of item user is selling
+  listingLocation: {
+    type: String,
+    required: true,
+    default: "none"
+  },
   // Price of item user is selling
   listingPrice: {
     type: Number,
     required: true
+  },
+  buyer: {
+    // Use Types.ObjectId outside of the schema
+    type: String,
+    default: ""
   }
+  // editedMerchant: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'MerchantFreet',
+  //   default: []
+  // }],
 }, {
   toObject: { virtuals: true, versionKey: false },
   toJSON: { virtuals: true, versionKey: false }

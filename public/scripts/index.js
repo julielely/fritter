@@ -38,7 +38,18 @@ const formsAndHandlers = {
   'view-freets-by-author': viewFreetsByAuthor,
   'create-freet': createFreet,
   'edit-freet': editFreet,
-  'delete-freet': deleteFreet
+  'delete-freet': deleteFreet,
+  'view-all-merchant-freets': viewAllMerchantFreets, 
+  'view-merchant-freets-by-author': viewMerchantFreetsByAuthor, 
+  'view-all-archived-freets': viewArchived,
+  'view-feed': viewFeed,
+  'archive-freet': archiveFreet,
+  'buy-merchant': purchaseMerchantFreet,
+  'view-all-pay': viewAllFritterPay,
+  'view-all-pay-by-author': viewAllFritterPayByAuthor,
+  'create-pay': createFritterPay,
+  'edit-pay': editFritterPay,
+  'delete-pay': deleteFritterPay
 };
 
 // Attach handlers to forms

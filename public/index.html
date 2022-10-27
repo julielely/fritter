@@ -19,6 +19,7 @@
     <section id="operations-container">
       <h2>Operations:</h2>
       <div class="scrollbox">
+        
         <form id="create-user">
           <h3>Create User</h3>
           <div>
@@ -76,7 +77,50 @@
         <form id="view-all-freets">
             <h3>View All Freets</h3>
             <input type="submit" value="View All Freets">
-          </form>
+        </form>
+
+        <form id="view-feed">
+          <h3>View Feed</h3>
+          <input type="submit" value="View Feed">
+      </form>
+
+        <form id="view-all-merchant-freets">
+          <h3>View All Merchant Freets</h3>
+          <label for="listingStatus">Listing Status</label>
+          <select name="listingStatus" id="listingStatus">
+            <option value="all">All</option>
+            <option value="forsale">For Sale</option>
+            <option value="sold">Sold</option>
+          </select>
+          <input type="submit" value="View All Merchant Freets">
+        </form>
+
+        <form id="view-all-archived-freets">
+          <h3>View All Archived Freets</h3>
+          <input type="submit" value="View All Archived Freets">
+        </form>
+
+        <form id="archive-freet">
+          <h3>Archive or Unarchive Freet</h3>
+          <select name="archiveStatus" id="archiveStatus">
+            <option value="archive">Archive</option>
+            <option value="unarchive">Unarchive</option>
+          </select>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Archive Freet">
+        </form>
+
+        <!-- <form id="unarchive-freet">
+          <h3>Unarchive Freet</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Unarchive Freet">
+        </form> -->
 
         <form id="view-freets-by-author">
           <h3>View Freets By Author</h3>
@@ -85,6 +129,30 @@
             <input id="author" name="author">
           </div>
           <input type="submit" value="View Freets By Author">
+        </form>
+
+        <form id="view-merchant-freets-by-author">
+          <h3>View Freets Merchant By Author</h3>
+          <label for="listingStatus">Listing Status</label>
+          <select name="listingStatus" id="listingStatus">
+            <option value="all">All</option>
+            <option value="forsale">For Sale</option>
+            <option value="sold">Sold</option>
+          </select>
+          <div>
+            <label for="merchantAuthor">Author:</label>
+            <input id="merchantAuthor" name="merchantAuthor">
+          </div>
+          <input type="submit" value="View Merchant Freets By Author">
+        </form>
+
+        <form id="buy-merchant">
+          <h3>Buy MerchantFreet</h3>
+          <div>
+            <label for="id">id:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Buy">
         </form>
 
         <form id="create-freet">
@@ -106,15 +174,17 @@
                 <label for="listingPrice">Item Price:</label>
                 <input id="listingPrice" name="listingPrice">
               </div>
+              <div>
+                <label for="listingLocation">Location:</label>
+                <input id="listingLocation" name="listingLocation">
+              </div>
             </div>
-
             <div class="type-freet-container" id="fleeting">
               <div>
                 <label for="expirationDate">Expiration Date:</label>
                 <input type="date" id="expirationDate" name="expirationDate">
               </div>
             </div>
-
           </div>
           
 
@@ -133,6 +203,38 @@
             <label for="id">ID:</label>
             <input id="id" name="id">
           </div>
+
+          <label for="typeFreet">Freet Type</label>
+          <select name="typeFreet" id="editTypeFreet">
+            <option value="default">Default Freet</option>
+            <option value="merchant">Merchant Freet</option>
+            <option value="fleeting">Fleeting Freet</option>
+          </select>
+
+          <div>
+            <div class="type-freet-container" id="editmerchant">
+              <div>
+                <label for="listingName">Item Title:</label>
+                <input id="listingName" name="listingName">
+              </div>
+              <div>
+                <label for="listingPrice">Item Price:</label>
+                <input id="listingPrice" name="listingPrice">
+              </div>
+              <div>
+                <label for="listingLocation">Location:</label>
+                <input id="listingLocation" name="listingLocation">
+              </div>
+            </div>
+
+            <div class="type-freet-container" id="editfleeting">
+              <div>
+                <label for="expirationDate">Expiration Date:</label>
+                <input type="date" id="expirationDate" name="expirationDate">
+              </div>
+            </div>
+          </div>
+
           <div>
             <label for="content">Content:</label>
             <textarea id="content" name="content"></textarea>
@@ -148,6 +250,63 @@
           </div>
           <input type="submit" value="Delete Freet">
         </form>
+
+        <form id="create-pay">
+          <h3>Add FritterPay</h3>
+          <label for="paymentType">Payment Type</label>
+          <select name="paymentType" id="paymentType">
+            <option value="venmo">Venmo</option>
+            <option value="cashapp">CashApp</option>
+            <option value="zelle">Zelle</option>
+          </select>
+          <div>
+            <label for="username">Username:</label>
+            <input id="username" name="username">
+          </div>
+          <div>
+            <label for="link">Link:</label>
+            <input id="link" name="link">
+          </div>
+          <input type="submit" value="Add Fritter Pay">
+        </form>
+
+        <form id="edit-pay">
+          <h3>Edit FritterPay</h3>
+          <div>
+            <label for="id">ID:</label>
+            <input id="id" name="id">
+          </div>
+          <label for="paymentType">Payment Type</label>
+          <select name="paymentType" id="paymentType">
+            <option value="venmo">Venmo</option>
+            <option value="cashapp">CashApp</option>
+            <option value="zelle">Zelle</option>
+          </select>
+          <div>
+            <label for="username">Username:</label>
+            <input id="username" name="username">
+          </div>
+          <div>
+            <label for="link">Link:</label>
+            <input id="link" name="link">
+          </div>
+          <input type="submit" value="Edit Pay">
+        </form>
+
+        <form id="view-all-pay">
+          <h3>View All FritterPay</h3>
+          <input type="submit" value="View All Pay">
+        </form>
+
+        <form id="view-all-pay">
+          <h3>View FritterPay by user</h3>
+          <div>
+            <label for="username">Username:</label>
+            <input id="username" name="username">
+          </div>
+          <input type="submit" value="View All Pay">
+        </form>
+
       </div>
     </section>
     <section>
@@ -162,6 +321,7 @@
   <script>
   $('.type-freet-container').hide();
 
+  // create freet
   $('#typeFreet').change(function () {
       var value = this.value;
       $('.type-freet-container').hide();
@@ -177,6 +337,24 @@
         $('.type-freet-container').hide();
       }
   });
+
+  // edit freet
+  $('#editTypeFreet').change(function () {
+      var value = this.value;
+      $('.type-freet-container').hide();
+      if (value == "merchant") {
+        $('#edit' + this.value).show();
+        $('#editfleeting').show();
+      }
+      else if (value == "fleeting") {
+        $('#editmerchant').hide()
+        $('#edit' + this.value).show();
+      }
+      else {
+        $('.type-freet-container').hide();
+      }
+  });
+
   </script>
 
 </body>

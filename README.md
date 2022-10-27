@@ -197,6 +197,11 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body**
 
 - `content` _{string}_ - The content of the freet
+- `freetType` _{string}_ - Default, fleeting, or merchant
+- `expiration` _{Date}_ - If merchant/fleeting
+- `listingName` _{string}_ - Merchant freet name
+- `listingPrice` _{string}_ - Merchant freet price
+- `listingLocation` _{string}_ - Merchant freet location
 
 **Returns**
 
@@ -319,47 +324,81 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **---New Concept----**
 
-#### `GET /api/freets?author=USERNAME&freetType=TYPE` - Get different types of freets by author
+#### `GET /api/freets/merchantFreets` - Get all merchant freet
+
+**Returns**
+
+- An array of all freets sorted in descending order by date modified
+
+
+#### `POST /api/freets/merchantFreets` - Create a new merchant freet
 
 **Body**
 
-- `username` _{string}_ - The user's username
-- `freetType` _{string}_ - The type of freet a user is looking for (Default, Fleeting, Merchant)
+- `content` _{string}_ - The content of the parent freet
+- `expiration` _{string}_ - The expiration of the parent freet
+- `listingName` _{string}_ - The name of the listing
+- `listingPrice` _{string}_ - The price of the listing
 
 **Returns**
 
-- An array of type `freetType` freets created by user with username `author`
+- A success message
+- A object with the created freet and merchantFreet
 
 **Throws**
 
-- `400` if `freeType` is not given
+- `403` if the user is not logged in
+- `400` If the freet content is empty or a stream of empty spaces
+- `413` If the freet content is more than 140 characters long
+
+#### `GET /api/freets/merchantFreets/author=id` - Get merchant freets by author
+
+**Returns**
+
+- An array of merchant freets created by user with username `author`
+
+**Throws**
+
 - `400` if `author` is not given
 - `404` if `author` is not a recognized username of any user
 
-#### `PUT /api/freets?freetType=TYPE` - Update merchantFreet as sold
+
+#### `PATCH /api/freets/merchantFreets/:id` - Update merchantFreet as sold
 
 **Body** 
 
-- `freeType` _{string}_ - The type of freet. In this case, "merchant"
-- `freeStatus` _{string}_ - For sale or Sold.
+- `listingStatus` _{string}_ - For sale or sold.
 
 **Throws**
 
-- `400` if `author` is not given
-- `404` if `author` is not a recognized username of any user
+- `400` freetStatus input is invalid
+- `404` if the freetId is invalid
 
-#### `GET /api/archived?author=USERNAME` - Get collection of archived freets
+#### `GET /api/freets/fleetingFreets` - Get all fleeting freets
 
 **Returns**
 
-- An array of archived freets created by user with username `author`
+- An array of all fleeting freets sorted in descending order by date modified
+
+#### `POST /api/users/fritterPay` - Add FritterPay
+
+**Body**
+
+- `paymentType` _{string}_ - Payment type
+- `paymentUsername` _{string}_ - Payment username
+
+**Returns**
+
+- A success message
+- A object with the created fritterPay
 
 **Throws**
 
-- `400` if `author` is not given
-- `404` if `author` is not a recognized username of any user
+- `403` if the user is not logged in
+- `400` If the freet content is empty or a stream of empty spaces
+- `413` If the freet content is more than 140 characters long
 
-#### `POST /api/archived` - Add a freet to the set of archived freets
+#### `PATCH /api/archived` - Add or remove a freet to the set of archived freets
 
 **Body**
 

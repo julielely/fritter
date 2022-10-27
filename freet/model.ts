@@ -1,3 +1,4 @@
+import { MerchantFreet } from 'merchantFreet/model';
 import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
@@ -14,8 +15,11 @@ export type Freet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  expiration: Date; // For Fleeting Freets 
   freetType: string; // Type of Freet (Default, Merchant, Fleeting)
   merchantFreet?: Types.ObjectId;
+  edited: Boolean;
+  // editedFreets: Array<Types.ObjectId>; 
 };
 
 export type PopulatedFreet = {
@@ -24,8 +28,11 @@ export type PopulatedFreet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  expiration: Date; // For Fleeting Freets
   freetType: string; // Type of Freet (Default, Merchant, Fleeting)
   merchantFreet?: Types.ObjectId;
+  edited: Boolean;
+  // editedFreets: Array<Types.ObjectId>; 
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -54,9 +61,24 @@ const FreetSchema = new Schema<Freet>({
     type: Date,
     required: true
   },
+  // editedFreets: [{
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'Freet',
+  //   default: []
+  // }],
+  expiration: {
+    type: Date,
+    required: true,
+    default: new Date ("4000-01-01")
+  },
   freetType: {
     type: String,
     required: true
+  },
+  edited:{
+    type: Boolean,
+    required: true,
+    default: false
   }},
   {
     toObject: { virtuals: true, versionKey: false },

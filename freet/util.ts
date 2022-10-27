@@ -9,6 +9,7 @@ type FreetResponse = {
   dateCreated: string;
   content: string;
   dateModified: string;
+  expiration: string;
   freetType: string;
 };
 
@@ -19,6 +20,34 @@ type FreetResponse = {
  * @returns {string} - formatted date as string
  */
 const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
+
+/**
+ * Check if date is expired
+ * 
+ * @param {Freet} freet - A freet object
+ * @returns {FreetResponse[]} - An array of filtered freets
+ */
+const isExpired = (freet: HydratedDocument<Freet>): Boolean => {
+  const freetExpiration = freet.expiration;
+  var now = new Date().valueOf();
+  const inputExpiration = freetExpiration.valueOf();
+
+  return !(inputExpiration - now > 0)
+}
+
+/**
+ * Check if date is not expired
+ * 
+ * @param {Freet} freet - A freet object
+ * @returns {FreetResponse[]} - An array of filtered freets
+ */
+ const isNotExpired = (freet: HydratedDocument<Freet>): Boolean => {
+  const freetExpiration = freet.expiration;
+  var now = new Date().valueOf();
+  const inputExpiration = freetExpiration.valueOf();
+
+  return inputExpiration - now > 0
+}
 
 /**
  * Transform a raw Freet object from the database into an object
@@ -42,10 +71,13 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
     author: username,
     dateCreated: formatDate(freet.dateCreated),
     dateModified: formatDate(freet.dateModified),
+    expiration: formatDate(freetCopy.expiration),
     freetType: freetCopy.freetType
   };
 };
 
 export {
-  constructFreetResponse
+  constructFreetResponse,
+  isExpired,
+  isNotExpired
 };
