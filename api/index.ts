@@ -77,7 +77,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // Add routers from routes folder
 app.use('/api/users', userRouter);
-app.use('/api/users/fritterPay', fritterPayRouter);
+app.use('/api/fritterPay', fritterPayRouter);
 app.use('/api/freets', freetRouter);
 app.use('/api/freets/merchantFreets', merchantFreetRouter);
 

@@ -44,6 +44,26 @@ class MerchantFreetCollection {
     return MerchantFreetModel.findOne({_id: merchantFreetId});
   }
 
+  /**
+   * Find a merchantFreet by listingStatus
+   *
+   * @param {string} merchantFreetId - The id of the Merchant Freet to find
+   * @return {Promise<HydratedDocumentMerchantFreet>[] | Promise<null> } - The Merchant Freet with the given merchantFreetId, if any
+   */
+   static async findForSale(): Promise<Array<HydratedDocument<MerchantFreet>>> {
+    return MerchantFreetModel.findOne({listingStatus: "forsale"}).populate("freet");
+  }
+
+  /**
+   * Find a merchantFreet by listingStatus
+   *
+   * @param {string} merchantFreetId - The id of the Merchant Freet to find
+   * @return {Promise<HydratedDocumentMerchantFreet>[] } - The Merchant Freet with the given merchantFreetId, if any
+   */
+   static async findSold(): Promise<Array<HydratedDocument<MerchantFreet>>> {
+    return MerchantFreetModel.findOne({listingStatus: "sold"}).populate("freet");
+  }
+
     /**
    * Find a merchantFreet by FreetId
    *
@@ -57,7 +77,7 @@ class MerchantFreetCollection {
   /**
    * Get all the merchant freets in the database, with no associated parent Freet
    *
-   * @return {Promise<HydratedDocument<MerchantFreet>[]>} - An array of all of the Merchant Freets
+   * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the Merchant Freets
    */
   static async findAll(): Promise<Array<HydratedDocument<Freet>>> {
     // Retrieves freets and sorts them from most to least recent
@@ -66,6 +86,20 @@ class MerchantFreetCollection {
     // return MerchantFreetModel.find({}).sort({dateModified: -1}).populate('freet');
     return FreetModel.find({}).sort({dateModified: -1}).populate('merchantFreet');
   }
+
+  /**
+   * Get all the merchant freets in the database, with no associated parent Freet
+   *
+   * @return {Promise<HydratedDocument<MerchantFreet>[]>} - An array of all of the Merchant Freets
+   */
+   static async findAllMerchant(): Promise<Array<HydratedDocument<MerchantFreet>>> {
+    // Retrieves freets and sorts them from most to least recent
+    console.log("Calling MerchantFreet findAll()"); 
+    // Sort by Freet's dateModified date
+    // return MerchantFreetModel.find({}).sort({dateModified: -1}).populate('freet');
+    return MerchantFreetModel.find({}).populate('freet');
+  }
+
 
 
    /**
@@ -146,14 +180,12 @@ class MerchantFreetCollection {
    * @param {string} listingStatus - The new status of merchantFreet (sold, forSale, deactivated)
    * @return {Promise<HydratedDocument<MerchantFreet>>} - The newly updated freet
    */
-  static async updateStatus(merchantFreetId: Types.ObjectId | string, listingStatus: string, buyer?: string): Promise<HydratedDocument<MerchantFreet>> {
+  static async updateStatus(merchantFreetId: Types.ObjectId | string, listingStatus: string, buyer: string): Promise<HydratedDocument<MerchantFreet>> {
     // Update merchant freet
     const merchantFreet = await MerchantFreetModel.findOne({_id: merchantFreetId});
     merchantFreet.listingStatus = listingStatus;
 
-    if (listingStatus == "sold") {
-      merchantFreet.buyer = buyer;
-    }
+    if (listingStatus == "sold") { merchantFreet.buyer = buyer; }
     await merchantFreet.save();
 
     // Find parent freet and update date modified

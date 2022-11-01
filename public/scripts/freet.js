@@ -35,25 +35,6 @@ function deleteFreet(fields) {
     .catch(showResponse);
 }
 
-/* MERCHANTFREETS */
-function viewAllMerchantFreets(fields) {
-  fetch(`/api/freets/merchantFreets?listingStatus=${fields.listingStatus}`)
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function viewMerchantFreetsByAuthor(fields) {
-  fetch(`/api/freets/merchantFreets?author=${fields.merchantAuthor}&listingStatus=${fields.listingStatus}`)
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function purchaseMerchantFreet(fields) {
-  fetch(`/api/freets/merchantFreets/purchase/${fields.id}`, {method: 'PATCH', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
-    .then(showResponse)
-    .catch(showResponse);
-}
-
 // view feed
 function viewFeed(fields) {
   fetch('/api/freets/feed')
@@ -71,38 +52,6 @@ function viewArchived(fields) {
 /// archived/:freetId?'
 function archiveFreet(fields) {
   fetch(`/api/freets/archived/${fields.id}`, {method: 'PATCH', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-
-/* FRITTERPAY */
-function viewAllFritterPay(fields) {
-  fetch('/api/users/fritterPay')
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function viewAllFritterPayByAuthor(fields) {
-  fetch(`/api/users/fritterPay?author=${fields.username}`)
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function createFritterPay(fields) {
-  fetch('/api/user/fritterPay', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function editFritterPay(fields) {
-  fetch(`/api/user/fritterPay/${fields.id}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function deleteFritterPay(fields) {
-  fetch(`/api/user/fritterPay/${fields.id}`, {method: 'DELETE'})
     .then(showResponse)
     .catch(showResponse);
 }

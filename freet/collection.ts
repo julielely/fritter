@@ -63,7 +63,7 @@ class FreetCollection {
       // Retrieves freets and sorts them from most to least recent
       return FreetModel.find({freetType: "merchant"}).sort({dateModified: -1}).populate('authorId merchantFreet');
     }
-  
+
   /**
    * Get all the merchant freets in the database
    *
@@ -73,6 +73,7 @@ class FreetCollection {
       // Retrieves freets and sorts them from most to least recent
       return FreetModel.find({freetType: "fleeting"}).sort({dateModified: -1}).populate('authorId');
     }
+    
 
   /**
    * Get all the freets in by given author
@@ -82,7 +83,7 @@ class FreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return FreetModel.find({authorId: author._id}).populate('authorId merchantFreet');
+    return FreetModel.find({authorId: author._id}).sort({dateModified: -1}).populate('authorId merchantFreet');
   }
 
    /**
@@ -93,7 +94,7 @@ class FreetCollection {
    */
     static async findAllMerchantByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
       const author = await UserCollection.findOneByUsername(username);
-      return FreetModel.find({authorId: author._id, freetType: "merchant"}).populate('authorId merchantFreet');
+      return FreetModel.find({authorId: author._id, freetType: "merchant"}).sort({dateModified: -1}).populate('authorId merchantFreet');
     }
 
   /**

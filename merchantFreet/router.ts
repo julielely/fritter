@@ -7,6 +7,9 @@ import * as freetValidator from '../freet/middleware';
 import * as merchantFreetValidator from './middleware';
 import * as freetUtil from '../freet/util';
 import * as util from './util';
+import MerchantFreetModel from './model';
+import FreetModel, { Freet } from 'freet/model';
+import { Document, Types } from 'mongoose';
 
 const router = express.Router();
 
@@ -24,7 +27,7 @@ const router = express.Router();
  *
  * @name GET /api/freets/merchantFreets?author=authorId&listingStatus=status
  *
- * @return {FreetResponse[]} - An array of freets created by user with id, authorId
+ * @return {MerchantFreetResponse[]} - An array of freets created by user with id, authorId
  * @throws {400} - If authorId is not given
  * @throws {404} - If no user has given authorId
  *
@@ -42,21 +45,25 @@ const router = express.Router();
     const allMerchantFreets = await FreetCollection.findAllMerchant();
 
     if (req.query.listingStatus == "forsale") { // find all merchantFreets and filter by listingStatus=forsale
-      console.log("no author, forsale branch ran");
-      const forSaleFeed = allMerchantFreets.filter(util.isForSale);
+      var forSaleFeed:any[] = [];
+      for (var oneFreet of allMerchantFreets) {
+        const result = await util.isForSale(oneFreet);
+        if (result) { forSaleFeed.push(oneFreet); }
+      }
+
       const response = forSaleFeed.map(freetUtil.constructFreetResponse);
       res.status(200).json(response);
     }
     else if (req.query.listingStatus == "sold") { // find all merchantFreets and filter by listingStatus=sold
-      console.log("no author, sold branch ran");
-      console.log(allMerchantFreets.length);
-      const soldFeed = allMerchantFreets.filter(util.isSold);
-      console.log(soldFeed.length);
+      var soldFeed:any[] = [];
+      for (var oneFreet of allMerchantFreets) {
+        const result = await util.isSold(oneFreet);
+        if (result) { soldFeed.push(oneFreet); }
+      }
       const response = soldFeed.map(freetUtil.constructFreetResponse);
       res.status(200).json(response);
     }
     else { // all
-      console.log("no author, all branch ran");
       const response = allMerchantFreets.map(freetUtil.constructFreetResponse);
       res.status(200).json(response);
     }
@@ -69,12 +76,21 @@ const router = express.Router();
     const authorFreets = await FreetCollection.findAllMerchantByUsername(req.query.author as string);
 
     if (req.query.listingStatus == "forsale") { // find all merchantFreets and filter by listingStatus=forsale
-      const forSaleFeed = authorFreets.filter(util.isForSale);
+      var forSaleFeed:any[] = [];
+      for (var oneFreet of authorFreets) {
+        const result = await util.isForSale(oneFreet);
+        if (result) { forSaleFeed.push(oneFreet); }
+      }
+
       const response = forSaleFeed.map(freetUtil.constructFreetResponse);
       res.status(200).json(response);
     }
     else if (req.query.listingStatus=="sold") { // find all merchantFreets and filter by listingStatus=sold
-      const soldFeed = authorFreets.filter(util.isSold);
+      var soldFeed:any[] = [];
+      for (var oneFreet of authorFreets) {
+        const result = await util.isSold(oneFreet);
+        if (result) { soldFeed.push(oneFreet); }
+      }
       const response = soldFeed.map(freetUtil.constructFreetResponse);
       res.status(200).json(response);
     }

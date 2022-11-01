@@ -46,7 +46,7 @@ const formsAndHandlers = {
   'archive-freet': archiveFreet,
   'buy-merchant': purchaseMerchantFreet,
   'view-all-pay': viewAllFritterPay,
-  'view-all-pay-by-author': viewAllFritterPayByAuthor,
+  // 'view-all-pay-by-author': viewAllFritterPayByAuthor,
   'create-pay': createFritterPay,
   'edit-pay': editFritterPay,
   'delete-pay': deleteFritterPay
@@ -55,6 +55,7 @@ const formsAndHandlers = {
 // Attach handlers to forms
 function init() {
   Object.entries(formsAndHandlers).forEach(([formID, handler]) => {
+    console.log(formID);
     const form = document.getElementById(formID);
     form.onsubmit = e => {
       e.preventDefault();

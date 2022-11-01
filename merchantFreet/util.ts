@@ -3,6 +3,8 @@ import moment from 'moment';
 import type {Freet, PopulatedFreet} from '../freet/model';
 import type {MerchantFreet, PopulatedMerchantFreet} from './model';
 import MerchantFreetCollection from './collection';
+import FreetCollection from 'freet/collection';
+import UserCollection from 'user/collection';
 
 // Update this if you add a property to the Freet type!
 type MerchantFreetResponse = {
@@ -13,6 +15,8 @@ type MerchantFreetResponse = {
   listingName: string;
   listingPrice: number;
   listingLocation: string;
+  dateModified: string;
+  author: string;
 };
 
 /**
@@ -23,17 +27,18 @@ type MerchantFreetResponse = {
  */
 const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
+
 /**
  * Check if merchantFreet is forSale
  * 
  * @param {Freet} freet - A freet object
  * @returns {Boolean} - True if freet is forSale, false otherwise
  */
-const isForSale = async (freet: HydratedDocument<Freet>): Promise<Boolean> => {
+const isForSale = async (freet: HydratedDocument<Freet>) => {
   const freetId = freet._id;
   const merchantFreet = await MerchantFreetCollection.findOneByFreet(freetId);
   const merchantFreetStatus = merchantFreet.listingStatus;
-  return merchantFreetStatus == "forsale"
+  return merchantFreetStatus === "forsale"
 }
 
 /**
@@ -42,11 +47,11 @@ const isForSale = async (freet: HydratedDocument<Freet>): Promise<Boolean> => {
  * @param {Freet} freet - A freet object
  * @returns {Boolean} - True if freet is sold, false otherwise
  */
- const isSold = async (freet: HydratedDocument<Freet>): Promise<Boolean> => {
+ const isSold = async (freet: HydratedDocument<Freet>) => {
   const freetId = freet._id;
   const merchantFreet = await MerchantFreetCollection.findOneByFreet(freetId);
   const merchantFreetStatus = merchantFreet.listingStatus;
-  return merchantFreetStatus == "sold"
+  return merchantFreetStatus === "sold"
 }
 
 /**
@@ -65,6 +70,8 @@ const constructMerchantFreetResponse = (merchantFreet: HydratedDocument<Merchant
 
   const {content} = merchantFreetCopy.freet;
   const {expiration} = merchantFreetCopy.freet;
+  const {authorId} = merchantFreetCopy.freet;
+  const {dateModified} = merchantFreetCopy.freet;
   delete merchantFreetCopy.freet;
   return {
     ...merchantFreetCopy,
@@ -74,7 +81,9 @@ const constructMerchantFreetResponse = (merchantFreet: HydratedDocument<Merchant
     listingStatus: merchantFreet.listingStatus,
     listingName: merchantFreet.listingName,
     listingPrice: merchantFreet.listingPrice,
-    listingLocation: merchantFreet.listingLocation
+    listingLocation: merchantFreet.listingLocation,
+    author: authorId.toString(),
+    dateModified: formatDate(dateModified)
   };
 };
 

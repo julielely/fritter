@@ -7,6 +7,39 @@ import * as util from './util';
 
 const router = express.Router();
 
+
+/**
+ * Create a new fritterPay object
+ *
+ * @name POST '/api/fritterPay'
+ *
+ * @param {string} user - The id of the user
+ * @param {string} paymentType - The payment type
+ * @param {string} paymentUsername - The username for said payment type
+ * @param {string} paymentLink - The link to payment
+ * @return {FreetResponse} - The created freet
+ * @throws {403} - If the user is not logged in
+ * @throws {400} - If username is not in correct format
+ */
+ router.post(
+  '/',
+  [
+    userValidator.isUserLoggedIn,
+    fritterPayValidator.isValidUsername,
+  ],
+  async (req: Request, res: Response) => {
+    console.log("POST FRITTERPAY");
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const fritterPay = await FritterPayCollection.addOne(userId, req.body.paymentType, 
+      req.body.username, req.body.link);
+
+    res.status(201).json({
+      message: 'Your fritterPay information was added successfully.',
+      freet: util.constructFritterPayResponse(fritterPay),
+    });
+  }
+);
+
 /**
  * Get all the fritterPay information
  *
@@ -18,7 +51,7 @@ const router = express.Router();
 /**
  * Get fritterPay information.
  *
- * @name GET /api/users/fritterPay?authorId=id
+ * @name GET /api/fritterPay?authorId=id
  *
  * @param {string} authorId - The id of the user
  * @param {string} paymentType - The payment type
@@ -57,7 +90,7 @@ router.get(
 /**
  * Delete fritterPay entry
  *
- * @name DELETE /api/user/fritterPay/:id
+ * @name DELETE /api/fritterPay/:id
  *
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in or is not the author of
@@ -80,40 +113,9 @@ router.get(
 );
 
 /**
- * Create a new fritterPay object
- *
- * @name POST /api/user/fritterPay
- *
- * @param {string} user - The id of the user
- * @param {string} paymentType - The payment type
- * @param {string} paymentUsername - The username for said payment type
- * @param {string} paymentLink - The link to payment
- * @return {FreetResponse} - The created freet
- * @throws {403} - If the user is not logged in
- * @throws {400} - If username is not in correct format
- */
- router.post(
-  '/',
-  [
-    userValidator.isUserLoggedIn,
-    fritterPayValidator.isValidUsername,
-  ],
-  async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const fritterPay = await FritterPayCollection.addOne(userId, req.body.paymentType, 
-      req.body.username, req.body.link);
-
-    res.status(201).json({
-      message: 'Your fritterPay information was added successfully.',
-      freet: util.constructFritterPayResponse(fritterPay),
-    });
-  }
-);
-
-/**
  * Modify fritterPay
  *
- * @name PUT /api/user/fritterPay/:id
+ * @name PUT /api/fritterPay/:id
  *
  * @param {string} paymentType - new payment type
  * @param {string} paymentUsername - new payment username
